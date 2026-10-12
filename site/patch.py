@@ -51,5 +51,36 @@ for source in root.rglob("*"):
         print("Normalized relative imports in", source.relative_to(root))
 
 (root / "src/styles/clean.css").write_text((Path(__file__).parent / "clean.css").read_text())
+# Replace the original layout with the real minimal UI shown in the previews.
+# Keep upstream section components, templates, charts and tables intact.
+components = {
+  "src/components/Content/Content.tsx": "Content.tsx",
+  "src/components/Topbar/Topbar.tsx": "Topbar.tsx",
+  "src/components/AppBar/AppBar.tsx": "Appbar.tsx",
+  "src/components/Sidebar/Sidebar.tsx": "Sidebar.tsx",
+  "src/components/ThemeSwitch/ThemeSwitch.tsx": "ThemeSwitch.tsx",
+  "src/components/Topbar/SearchDialog.tsx": "SearchDialog.tsx",
+}
+for destination, source in components.items():
+    (root / destination).write_text((Path(__file__).parent / source).read_text())
+tabs = root / "src/components/Tabs/Tabs.tsx"
+code = tabs.read_text()
+for old, new in (
+    ("className={styles.container}", 'className={styles.container + " atlas-card"}'),
+    ("className={styles.buttonContainer}", 'className={styles.buttonContainer + " atlas-card-actions"}'),
+    ("className={styles.tabButtonContainer}", 'className={styles.tabButtonContainer + " atlas-language-list"}'),
+    ("className={styles.tabButton}", 'className={styles.tabButton + " atlas-language-tab"}'),
+):
+    if old not in code:
+        raise RuntimeError(f"Missing Tabs marker {old}")
+    code = code.replace(old,new)
+tabs.write_text(code)
+(root / "src/styles/atlas.css").write_text((Path(__file__).parent / "atlas.css").read_text())
+app = root / "src/components/App/App.tsx"
+code = app.read_text().replace("import '@styles/clean.css'", "import '@styles/atlas.css'")
+# Upstream background animation is no longer needed.
+code = code.replace('<Background />','')
+app.write_text(code)
+
 (root / "public/.nojekyll").write_text("")
 print("Applied clean theme; upstream algorithm templates and MIT license retained.")
