@@ -60,6 +60,8 @@ components = {
   "src/components/Sidebar/Sidebar.tsx": "Sidebar.tsx",
   "src/components/ThemeSwitch/ThemeSwitch.tsx": "ThemeSwitch.tsx",
   "src/components/Topbar/SearchDialog.tsx": "SearchDialog.tsx",
+  "src/components/Code/Code.tsx": "Code.tsx",
+  "src/components/Tabs/Tabs.tsx": "Tabs.tsx",
 }
 for destination, source in components.items():
     (root / destination).write_text((Path(__file__).parent / source).read_text())
