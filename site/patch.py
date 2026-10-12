@@ -35,7 +35,7 @@ for source in root.rglob("*"):
         resolved = next((item.name for item in parent.iterdir() if item.is_file() and item.name.lower() == name.lower()), None)
         fixed = original[:-len(name)] + resolved if resolved else original
         return quote + fixed + quote
-    updated = re.sub(r"""(['"])(\\./[^'"]+\\.sass)\\1""", normalize, data)
+    updated = re.sub(r"""(['"])(\./[^'"]+\.sass)\1""", normalize, data)
     if updated != data:
         source.write_text(updated)
         print("Normalized style import in", source.relative_to(root))
