@@ -94,3 +94,37 @@ html{scroll-padding-top:65px}
 }
 @media(max-width:360px){.atlas-brand{font-size:12.5px}.atlas-topbar-actions{gap:0}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+
+
+/* Stable scroll and mobile chrome */
+html, body, #root { background-color:var(--atlas-page)!important; }
+html { overflow-anchor:none; }
+.atlas-main { overflow-anchor:none; }
+.atlas-footer { position:relative; flex-shrink:0; }
+.atlas-bottom { will-change:transform; transform:translate3d(0,0,0); }
+@media (max-width:768px) {
+  .atlas-bottom { background-color:var(--atlas-page)!important; bottom:0; }
+  .atlas-sidebar { box-sizing:border-box!important; display:flex!important; flex-direction:column!important; overflow:hidden!important; }
+  .atlas-sheet-header {
+    box-sizing:border-box;
+    height:64px!important;
+    min-height:64px!important;
+    max-height:64px!important;
+    flex:0 0 64px!important;
+    padding:0 22px!important;
+    margin:0!important;
+    background:var(--atlas-panel)!important;
+  }
+  .atlas-sidebar [class*=scrollContainer] {
+    box-sizing:border-box!important;
+    flex:1 1 0!important;
+    min-height:0!important;
+    height:0!important;
+    max-height:none!important;
+    overflow:auto!important;
+    overscroll-behavior:contain;
+    padding:12px 18px calc(22px + env(safe-area-inset-bottom,0px))!important;
+  }
+  .atlas-sidebar [class*=accordion] { margin:0!important; }
+  .atlas-sidebar [class*=accordion] button { line-height:1.4; }
+}
