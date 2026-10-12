@@ -65,18 +65,6 @@ components = {
 }
 for destination, source in components.items():
     (root / destination).write_text((Path(__file__).parent / source).read_text())
-tabs = root / "src/components/Tabs/Tabs.tsx"
-code = tabs.read_text()
-for old, new in (
-    ("className={styles.container}", 'className={styles.container + " atlas-card"}'),
-    ("className={styles.buttonContainer}", 'className={styles.buttonContainer + " atlas-card-actions"}'),
-    ("className={styles.tabButtonContainer}", 'className={styles.tabButtonContainer + " atlas-language-list"}'),
-    ("className={styles.tabButton}", 'className={styles.tabButton + " atlas-language-tab"}'),
-):
-    if old not in code:
-        raise RuntimeError(f"Missing Tabs marker {old}")
-    code = code.replace(old,new)
-tabs.write_text(code)
 (root / "src/styles/atlas.css").write_text((Path(__file__).parent / "atlas.css").read_text())
 app = root / "src/components/App/App.tsx"
 code = app.read_text().replace("import '@styles/clean.css'", "import '@styles/atlas.css'")
