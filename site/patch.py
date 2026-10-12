@@ -20,7 +20,7 @@ edit("src/components/LinkWithTooltip/LinkWithTooltip.tsx", "        scrollTo(hre
 edit("src/components/Topbar/Topbar.tsx", "href=\"/leetcode-cheatsheet\"", 'href="https://github.com/Froehlich99/leetcode-cheatsheet"')
 edit("src/components/Topbar/Topbar.tsx", "        <header ref={ref}", "        <header ref={ref}") if False else None
 edit("index.html", '<html lang="en" data-theme="light">', '<html lang="en" data-theme="dark">')
-edit("index.html", '<title>LeetCode Cheatsheet</title>', '<title>LeetCode Cheatsheet</title>\n    <meta name="theme-color" content="#111318" />')
+edit("index.html", '<title>LeetCode Cheatsheet</title>', '<title>LeetCode Cheatsheet</title>\n    <meta name="theme-color" content="#111214" />')
 # Upstream contains mixed-case .sass imports that fail on Linux runners.
 # Resolve them against the actual filenames without modifying any algorithm code.
 import re
