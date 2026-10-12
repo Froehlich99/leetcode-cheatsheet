@@ -30,6 +30,7 @@ jobs:
           node -e "const fs=require('fs'),z=require('zlib');fs.writeFileSync('/tmp/ui-overrides.tar',z.brotliDecompressSync(Buffer.from(fs.readFileSync('site/ui-overrides.br.txt','utf8').trim(),'base64')))"
           tar -tf /tmp/ui-overrides.tar | head -20
           tar -xf /tmp/ui-overrides.tar -C upstream
+          python3 site/normalize.py upstream
       - name: Install and build
         working-directory: upstream
         run: |
