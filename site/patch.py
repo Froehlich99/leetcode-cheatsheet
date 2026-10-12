@@ -30,15 +30,25 @@ for source in root.rglob("*"):
     data = source.read_text()
     def normalize(match):
         quote, original = match.groups()
-        parent = source.parent
-        name = Path(original).name
-        resolved = next((item.name for item in parent.iterdir() if item.is_file() and item.name.lower() == name.lower()), None)
-        fixed = original[:-len(name)] + resolved if resolved else original
+        target = source.parent / original
+        if target.exists() or any(Path(str(target) + ext).exists() for ext in (".tsx", ".ts", ".js", ".jsx")):
+            return match.group(0)
+        parent = target.parent
+        if not parent.is_dir():
+            return match.group(0)
+        name = target.name
+        candidates = [item for item in parent.iterdir() if item.is_file()]
+        resolved = next((item.name for item in candidates if item.name.lower() == name.lower()), None)
+        if resolved is None and not target.suffix:
+            resolved = next((item.stem for item in candidates if item.stem.lower() == name.lower() and item.suffix in (".tsx", ".ts", ".js", ".jsx")), None)
+        if not resolved:
+            return match.group(0)
+        fixed = original[:-len(name)] + resolved
         return quote + fixed + quote
-    updated = re.sub(r"""(['"])(\./[^'"]+\.sass)\1""", normalize, data)
+    updated = re.sub(r"""(['"])(\./[^'"]+)\1""", normalize, data)
     if updated != data:
         source.write_text(updated)
-        print("Normalized style import in", source.relative_to(root))
+        print("Normalized relative imports in", source.relative_to(root))
 
 (root / "src/styles/clean.css").write_text((Path(__file__).parent / "clean.css").read_text())
 (root / "public/.nojekyll").write_text("")
