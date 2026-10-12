@@ -12,7 +12,7 @@ def edit(name, a, b):
         raise RuntimeError(f"Upstream changed, expected marker missing: {name}")
     path.write_text(data.replace(a, b, 1))
 
-edit("src/components/App/App.tsx", "import '@styles/styles.sass'", "import '@styles/styles.sass'\nimport '@styles/clean.css'")
+edit("src/components/App/App.tsx", "import '@styles/styles.sass'", "import '@styles/styles.sass'\nimport '@styles/atlas.css'")
 edit("src/components/Sidebar/SidebarProvider.tsx", "useState(true)", 'useState(() => typeof window !== "undefined" && window.innerWidth > 768)')
 edit("src/components/LinkWithTooltip/LinkWithTooltip.tsx", "import styles from './LinkWithTooltip.module.sass'", "import styles from './LinkWithTooltip.module.sass'\nimport { useSidebar } from '@components/Sidebar/SidebarProvider'")
 edit("src/components/LinkWithTooltip/LinkWithTooltip.tsx", "    let hoverTimer: NodeJS.Timeout", "    const { hideSidebar } = useSidebar()\n    let hoverTimer: NodeJS.Timeout")
