@@ -21,6 +21,29 @@ edit("src/components/Topbar/Topbar.tsx", "href=\"/leetcode-cheatsheet\"", 'href=
 edit("src/components/Topbar/Topbar.tsx", "        <header ref={ref}", "        <header ref={ref}") if False else None
 edit("index.html", '<html lang="en" data-theme="light">', '<html lang="en" data-theme="dark">')
 edit("index.html", '<title>LeetCode Cheatsheet</title>', '<title>LeetCode Cheatsheet</title>\n    <meta name="theme-color" content="#111318" />')
+# Upstream contains mixed-case .sass imports that fail on Linux runners.
+# Resolve them against the actual filenames without modifying any algorithm code.
+import re
+for source in root.rglob("*"):
+    if source.suffix not in (".tsx", ".ts", ".jsx", ".js"):
+        continue
+    data = source.read_text()
+    def normalize(match):
+        original = match.group(1)
+        if not original.lower().endswith(".sass"):
+            return original
+        parent = source.parent
+        candidate = parent / original
+        if candidate.exists() or not parent.exists():
+            return original
+        name = Path(original).name
+        resolved = next((item.name for item in parent.iterdir() if item.is_file() and item.name.lower() == name.lower()), None)
+        return original[:-len(name)] + resolved if resolved else original
+    updated = re.sub(r"(?<=['\\\"])\\./[^'\\\"]+\\.sass", normalize, data)
+    if updated != data:
+        source.write_text(updated)
+        print("Normalized style import in", source.relative_to(root))
+
 (root / "src/styles/clean.css").write_text((Path(__file__).parent / "clean.css").read_text())
 (root / "public/.nojekyll").write_text("")
 print("Applied clean theme; upstream algorithm templates and MIT license retained.")
